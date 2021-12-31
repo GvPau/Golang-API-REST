@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"image/gif"
@@ -10,11 +9,8 @@ import (
 	"math"
 	"math/rand"
 	"net/http"
-	"sync"
 )
 
-var mu sync.Mutex
-var count int
 var palette = []color.Color{color.White, color.Black}
 
 const (
@@ -26,7 +22,8 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		lissajous(w)
 	})
-	http.HandleFunc("/count", counter)
+
+	println("Listening at port 8000")
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }
 
@@ -50,12 +47,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "URL.Path = %q\n", r.URL.Path)
 }
 */
-
-func counter(w http.ResponseWriter, r *http.Request) {
-	mu.Lock()
-	fmt.Fprintf(w, "Count %d\n", count)
-	mu.Unlock()
-}
 
 func lissajous(out io.Writer) {
 	const (
